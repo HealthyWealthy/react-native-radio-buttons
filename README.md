@@ -12,17 +12,13 @@ Both the container and option nodes are customizable. Comes with SegmentedContro
 npm i -S react-native-radio-buttons
 ```
 
-This module relies on ES6 modules, you should add the whitelist instruction in your Babel config (see [example `.babelrc`](./examples/.babelrc)).
-
 ## Demo app
 
 ```sh
-git clone git@github.com:ArnaudRinquin/react-native-radio-buttons.git
-cd react-native-buttons
+git clone https://github.com/ArnaudRinquin/react-native-radio-buttons.git
+cd react-native-radio-buttons
 npm run demo
 ```
-
-And press `Cmd + R`
 
 ## Usage
 
@@ -43,10 +39,10 @@ render() {
     this.setState({
       selectedOption
     });
-  };
+  }
 
   function renderOption(option, selected, onSelect, index){
-    const style = selected ? { fontWeight: 'bold'} : {}
+    const style = selected ? { fontWeight: 'bold'} : {};
 
     return (
       <TouchableWithoutFeedback onPress={onSelect} key={index}>
@@ -69,8 +65,7 @@ render() {
         renderContainer={ renderContainer }
       />
       <Text>Selected option: {this.state.selectedOption || 'none'}</Text>
-    </View>)
-  ;
+    </View>);
 }
 
 ```
@@ -82,12 +77,16 @@ Will render this
 ## Props
 
 * `options - []` mandatory array of anything, will be passed to `renderOption`
-* `onSelection - function(option){}` option selection callback
+* `onSelection - function(selectedOption, selectedIndex){}` option selection callback
+* `selectedIndex - index` the  initially selected index, optional.
 * `selectedOption - option` the initially selected option, optional
-* `renderOption - function(option, selected, onSelect, index)` should return an option node, default generate `<Text>` nodes and adds `{fontWieght:'bold'}` to the selected option.
+* `renderOption - function(option, selected, onSelect, index)` should return an option node, default generate `<Text>` nodes and adds `{fontWeight:'bold'}` to the selected option.
 * `renderContainer - function(optionsNodes)` must render the container, default is RadioButtons.renderVerticalContainer (see below)
+* `optionStyle` - optional styles to be applied to the `<Text>` elements of the options themselves.
+* `optionContainerStyle` - optional styles to be applied to the the `<View>` that contain the options.
+* `testOptionEqual- function(selectedOption, currentOption){}` optional compares and returns bool.
 
-### Full javascript SegmentedControls clone
+### Full JavaScript SegmentedControls clone
 
 This library comes with a clone of the native `SegmentedControls`, based on `RadioButtons`.
 
@@ -103,17 +102,19 @@ import { SegmentedControls } from 'react-native-radio-buttons'
 />
 ```
 
-You override al the defaults through the props.
+You override all the defaults through the props.
 
 ```jsx
 <SegmentedControls
-  tint= {'#f80046'}
+  tint={'#f80046'}
   selectedTint= {'white'}
   backTint= {'#1e2126'}
   options={ options }
   allowFontScaling={ false } // default: true
   onSelection={ setSelectedOption.bind(this) }
   selectedOption={ this.state.selectedOption }
+  optionStyle={{fontFamily: 'AvenirNext-Medium'}}
+  optionContainerStyle={{flex: 1}}
 />
 ```
 
@@ -146,6 +147,12 @@ const DEFAULTS = {
 }
 ```
 
+You can also specify `containerStyle`, `optionContainerStyle`, and `optionStyle` to use any style you want:
+
+* `containerStyle` - optional styles to be applied to the outermost `<View>` component.
+* `optionStyle` - optional styles to be applied to the `<Text>` elements of the options themselves.
+* `optionContainerStyle` - optional styles to be applied to the the `<View>` that contain the options.
+
 You can also specify how to extract the labels from the options through the extractText prop.
 
 ```jsx
@@ -163,12 +170,26 @@ options = [
 <SegmentedControls
   options={ options }
   onSelection={ setSelectedOption.bind(this) }
-  selectedOption={ this.state.selectedOption },
+  selectedOption={ this.state.selectedOption }
   extractText={ (option) => option.label }
 />
 ```
 
-Or even specify the whole `renderOption()` function:
+If you decide to declare `options` as an array of objects, do also include a `testOptionEqual` prop for customized equality checking, otherwise changing `selectedOption` programmatically would not update the UI correctly. 
+
+With the above `options`, you'll need `testOptionEqual` to be as follows in order for `selectedOption` to display correctly.
+
+```jsx
+  <SegmentedControls
+    options={ options }
+    onSelection={ setSelectedOption.bind(this) }
+    selectedOption={ this.state.selectedOption }
+    extractText={ (option) => option.label }
+    testOptionEqual={(selectedValue, option) => selectedValue === option.value}
+  />
+```
+
+Moreover, you can even specify the whole `renderOption()` function:
 
 ```jsx
 <SegmentedControls
@@ -184,7 +205,7 @@ Or even specify the whole `renderOption()` function:
 ## Helpers
 **RadioButtons.renderVerticalContainer;**
 
-A super simple `renderContainer` function that generates a <View> with `{flexDirection: "column"}`. It is used as default `rendeContainer` if you don't specify it.
+A super simple `renderContainer` function that generates a <View> with `{flexDirection: "column"}`. It is used as default `renderContainer` if you don't specify it.
 
 Usage:
 
@@ -210,7 +231,7 @@ Usage:
 />
 ```
 
-**RadioButtons.getViewContainerRenderer(viewCOntainerStyle);**
+**RadioButtons.getViewContainerRenderer(viewContainerStyle);**
 
 An helper that generates a simple `<View>` with the provided style.
 

@@ -1,35 +1,22 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
-
-import React from 'react-native';
-const {
-  ScrollView,
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  TouchableWithoutFeedback,
-} = React;
+import React from 'react';
+import { StyleSheet, Text, ScrollView, View, TouchableWithoutFeedback } from 'react-native';
 
 import { RadioButtons, SegmentedControls } from 'react-native-radio-buttons';
 
-class Examples extends React.Component {
-  constructor(){
-    super();
-    this.state = {};
-  }
+export default class App extends React.Component {
+
+  state = {}
+
   render() {
-    return (<ScrollView style={{
-      backgroundColor: '#eeeeee'
-    }}>
-      {this.renderbasic()}
-      {this.renderCheckList()}
-      {this.renderSegmentControlClone()}
-      {this.renderVerticalSegmentControlClone()}
-      {this.renderCustomSegmentControlClone()}
-    </ScrollView>);
+    return (
+      <ScrollView style={styles.container}>
+        {this.renderbasic()}
+        {this.renderCheckList()}
+        {this.renderSegmentControlClone()}
+        {this.renderVerticalSegmentControlClone()}
+        {this.renderCustomSegmentControlClone()}
+      </ScrollView>
+    );
   }
 
   renderCheckList() {
@@ -157,7 +144,7 @@ class Examples extends React.Component {
 
       return (
         <TouchableWithoutFeedback onPress={onSelect} key={index}>
-          <Text style={style}>{option}</Text>
+          <View><Text style={style}>{option}</Text></View>
         </TouchableWithoutFeedback>
       );
     }
@@ -198,7 +185,7 @@ class Examples extends React.Component {
         <SegmentedControls
           options={ options }
           onSelection={ setSelectedOption.bind(this) }
-          selectedOption={this.state.selectedOption }
+          selectedOption={ this.state.selectedSegment }
         />
         <Text style={{marginTop: 10}}>Selected option: {this.state.selectedSegment || 'none'}</Text>
       </View>);
@@ -229,7 +216,7 @@ class Examples extends React.Component {
           direction={'column'}
           options={ options }
           onSelection={ setSelectedOption.bind(this) }
-          selectedOption={this.state.selectedOption }
+          selectedOption={this.state.selectedVerticalSegment }
         />
         <Text style={{marginTop: 10}}>Selected option: {this.state.selectedVerticalSegment || 'none'}</Text>
       </View>);
@@ -259,6 +246,10 @@ class Examples extends React.Component {
             fontWeight: 'bold',
             fontFamily: 'Snell Roundhand'
           }}
+          containerStyle= {{
+            marginLeft: 10,
+            marginRight: 10,
+          }}
           options={ options }
           onSelection={ setSelectedOption.bind(this) }
           selectedOption={ this.state.selectedCustomSegment }
@@ -278,8 +269,6 @@ class Examples extends React.Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
@@ -293,5 +282,3 @@ var styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-
-AppRegistry.registerComponent('examples', () => Examples);
